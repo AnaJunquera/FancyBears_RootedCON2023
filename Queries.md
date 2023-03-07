@@ -143,6 +143,7 @@ event_type = FILE_CREATED and file_path regex "^[A-Z]:(\\Windows\\|\\Users\\[\w\
 ```
 
 ### Data exfiltration using Google Drive (volumetry) (T1567.002)
+This query will show a graph with the number of bytes uploaded to Google Drive each day.
 ```
 event_type = NETWORK_CONNECTION and URL contains any ("drive.google.com", "www.googleapis.com")
 | sum (bytes_uploaded) by date
