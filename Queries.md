@@ -1,5 +1,5 @@
 # Fancy Bear related queries
-These queries are shown here in pseudocode, before using them in any EDR you should translate them to the correct languaje.
+These queries are shown here in pseudocode, before using them in any EDR you should translate them to the correct language.
 
 ## Execution queries
 
