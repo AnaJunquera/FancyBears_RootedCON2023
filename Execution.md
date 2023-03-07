@@ -1,11 +1,11 @@
 # Execution queries
 
-## PowerShell used for downloading scripts or malware 
+## PowerShell used for downloading scripts or malware (T1059.001)
 ```
 process = "powershell.exe" and command_line in contains ("DownloadFile", "Invoke-WebRequest", "DownloadString", "iwr")
 ```
 
-## LNK files executed manually by the user
+## LNK files executed manually by the user (T1204.001)
 It is necessary to exclude the LNKs from the shells (i.e. "Command Prompt.lnk") and other false positive depending on the infrastructure.
 
 ```
