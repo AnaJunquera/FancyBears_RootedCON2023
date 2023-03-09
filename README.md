@@ -77,7 +77,7 @@ event_type in (REGISTRY_CREATE_KEY, REGISTRY_SET_VALUE) and registry_key contain
 ### UAC bypass using common Windows LOLBins (T1548.002)
 ```
 event_type = PROCESS_START 
-and parent_process in ("WSReset.exe", "slui.exe", "fodhelper.exe", "eventvwr.exe", "cmstp.exe", "sethc.exe", "werfault.exe") 
+and parent_process in ("WSReset.exe", "slui.exe", "fodhelper.exe", "eventvwr.exe", "cmstp.exe", "sethc.exe") 
 and child_process_integrity_level in ("High", "System")
 ```
 
