@@ -21,7 +21,7 @@ event_type = FILE_OPENED and parent_process = "explorer.exe" and extension = "ln
 
 ### Certutil used for decoding Base64 payload stored in .txt file (T1140)
 ```
-process = "certutil.exe" and command_line regex ".*\-decode.*\.txt.*"
+process = "certutil.exe" and command_line regex "(?i).*\-decode.*\.txt.*"
 ```
 
 ### Event registry entries removed by using wevtutil (T1070.001)
@@ -32,7 +32,7 @@ command_line regex "(?i).*wevtutil\s+cl\s+(system|security|application).*"
 ### Malicious DLLs run with rundll32 (T1218.011)
 It looks for DLLs stored directly in "C:\Windows" or "C:\Users\User\AppData\" and executed with rundll32. Some malware has been found to store malicious DLLs in those directories.
 ```
-command_line regex ".*rundll32\.exe.*(C:\\Windows|C:\\Users\\[\w\s\.]+\\AppData|[A-Z]:)\\[\w\s\.]+\.dll.*"
+command_line regex "(?i).*rundll32\.exe.*(C:\\Windows|C:\\Users\\[\w\s\.]+\\AppData|[A-Z]:)\\[\w\s\.]+\.dll.*"
 ```
 ## Credential Access queries
 
@@ -63,7 +63,7 @@ event_type = REGISTRY_SET_VALUE and registry_key contains "\Environment\UserInit
 ### Use of Startup folder for persistence (T1547.001)
 ```
 event_type = FILE_CREATED 
-and file_path regex "^(C:\\Users\\.*\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\|C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp).*" 
+and file_path regex "(?i)^(C:\\Users\\.*\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\|C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp).*" 
 and file_name != "desktop.ini"
 ```
 
@@ -92,7 +92,7 @@ event_type = NETWORK_INBOUND and local_port in (445,139)
 
 ### Using net for mapping network drives (T1547.001)
 ```
-process in ("net.exe", "net1.exe") and command_line regex ".*net.*use.*\\\\.*"
+process in ("net.exe", "net1.exe") and command_line regex "(?i).*net.*use.*\\\\.*"
 ```
 
 ## Command and Control queries
@@ -108,15 +108,15 @@ and parent_process not in ("msedge.exe", "chrome.exe", "firefox.exe", "opera.exe
 
 ### Using forfiles for locating PDF, Excel or Word files (T1083)
 ```
-process = "forfiles.exe" and command_line regex ".*\.(xls|xlsx|doc|docx|pdf|ppt|pptx).*"
+process = "forfiles.exe" and command_line regex "(?i).*\.(xls|xlsx|doc|docx|pdf|ppt|pptx).*"
 ```
 
 ### Reading files from sensitive folders (T1083, T1518) - SkinnyBoy stealer
 ```
 event_type = FILE_OPENED
 and parent_process is not signed
-and file_path REGEX "^(C:\\Users\\.*\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Administrative Tools\\|C:\\Users\\.*\\AppData\\Roaming\\|C:\\Users\\.*\\AppData\\Roaming\\Microsoft\\Windows\\Templates\\|C:\\Users\\.*\\AppData\\Local\\Programs\\|C:\\Program Files( \(x86\))?\\)([a-zA-Z0-9\-\._]+)\\.*"
-| set folder = regextract(file_path,"^(C:\\Users\\.*\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Administrative Tools\\[a-zA-Z0-9\-\._]+\\|C:\\Users\\.*\\AppData\\Roaming\\[a-zA-Z0-9\-\._]+\\|C:\\Users\\.*\\AppData\\Roaming\\Microsoft\\Windows\\Templates\\[a-zA-Z0-9\-\._]+\\|C:\\Users\\.*\\AppData\\Local\\Programs\\[a-zA-Z0-9\-\._]+\\|C:\\Program Files\\[a-zA-Z0-9\-\._]+|C:\\Program Files \(x86\)\\[a-zA-Z0-9\-\._]+)\\.*"),1)
+and file_path REGEX "(?i)^(C:\\Users\\.*\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Administrative Tools\\|C:\\Users\\.*\\AppData\\Roaming\\|C:\\Users\\.*\\AppData\\Roaming\\Microsoft\\Windows\\Templates\\|C:\\Users\\.*\\AppData\\Local\\Programs\\|C:\\Program Files( \(x86\))?\\)([a-zA-Z0-9\-\._]+)\\.*"
+| set folder = regextract(file_path,"(?i)^(C:\\Users\\.*\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Administrative Tools\\[a-zA-Z0-9\-\._]+\\|C:\\Users\\.*\\AppData\\Roaming\\[a-zA-Z0-9\-\._]+\\|C:\\Users\\.*\\AppData\\Roaming\\Microsoft\\Windows\\Templates\\[a-zA-Z0-9\-\._]+\\|C:\\Users\\.*\\AppData\\Local\\Programs\\[a-zA-Z0-9\-\._]+\\|C:\\Program Files\\[a-zA-Z0-9\-\._]+|C:\\Program Files \(x86\)\\[a-zA-Z0-9\-\._]+)\\.*"),1)
 | counter = count_distinct(folder) by host, parent_process_pid
 | where counter > 5
 ```
@@ -130,14 +130,14 @@ event_type = FILE_CREATED and parent_process in ("powershell.exe", "nircmd.exe")
 
 ### Storing collected information in temporal file in %ALLUSERSPROFILE% (T1074.001)
 ```
-event_type = FILE_CREATED and file_path regex "^C:\\ProgramData\\[\w\s\_]+\.tmp$"
+event_type = FILE_CREATED and file_path regex "(?i)^C:\\ProgramData\\[\w\s\_]+\.tmp$"
 ```
 
 ## Exfiltration queries
 
 ### Dividing files in fragments smaller than 1MB (T1030)
 ```
-event_type = FILE_CREATED and file_path regex "^[A-Z]:(\\Windows\\|\\Users\\[\w\s\.]+\\AppData\\|\\ProgramData\\|\\)[\w\s\.\_]+\.\w+" and file_size < 1MB
+event_type = FILE_CREATED and file_path regex "(?i)^[A-Z]:(\\Windows\\|\\Users\\[\w\s\.]+\\AppData\\|\\ProgramData\\|\\)[\w\s\.\_]+\.\w+" and file_size < 1MB
 | count as created_files by parent_pid, endpoint_id
 | where created files > 5
 ```
