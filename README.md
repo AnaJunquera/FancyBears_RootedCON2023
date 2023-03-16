@@ -86,7 +86,7 @@ and child_process_integrity_level in ("High", "System")
 ### Send malicious files through SMB (T1570)
 ```
 event_type = NETWORK_INBOUND and local_port in (445,139)
-| join (event_type = FILE_CREATED and file_extension in ("exe", "dll", "bat", "vbs") by endpoint_id, process_id
+| join (event_type = FILE_CREATED and file_extension in ("exe", "dll", "bat", "vbs") by endpoint_id
 | where time_difference (t1, t2) < 5min
 ```
 
