@@ -125,7 +125,7 @@ and file_path REGEX "(?i)^(C:\\Users\\.*\\AppData\\Roaming\\Microsoft\\Windows\\
 
 ### Making screenshots in victim machine (T1113)
 ```
-event_type = FILE_CREATED and parent_process in ("powershell.exe", "nircmd.exe") and file_path regex  "\.(png|jpeg|jpg|svg|bmp)$"
+event_type = FILE_CREATED and parent_process in ("powershell.exe", "nircmd.exe") and file_path regex  ".*\.(png|jpeg|jpg|svg|bmp)$"
 ```
 
 ### Storing collected information in temporal file in %ALLUSERSPROFILE% (T1074.001)
