@@ -87,7 +87,7 @@ and child_process_integrity_level in ("High", "System")
 ```
 event_type = NETWORK_INBOUND and local_port in (445,139)
 | join (event_type = FILE_CREATED and file_extension in ("exe", "dll", "bat", "vbs") by endpoint_id
-| where time_difference (t1, t2) < 5min
+| where time_difference (t1, t2) < 5seg
 ```
 
 ### Using net for mapping network drives (T1547.001)
