@@ -92,7 +92,7 @@ event_type = NETWORK_INBOUND and local_port in (445,139)
 
 ### Using net for mapping network drives (T1547.001)
 ```
-process in ("net.exe", "net1.exe") and command_line regex "(?i).*net.*use.*\\\\.*"
+process in ("net.exe", "net1.exe") and command_line regex "(?i).*net.*use.*[A-Z]:.*\\\\.*"
 ```
 
 ## Command and Control queries
