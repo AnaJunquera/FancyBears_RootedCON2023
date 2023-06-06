@@ -1,6 +1,12 @@
 # Fancy Bear related queries
 These queries are shown here in pseudocode, before using them in any EDR you should translate them to the correct language.
 
+## Initial Access query
+### Scripting processes executed from Outlook (T1566)
+```
+parent_process = "OUTLOOK.EXE" and child_process in ("wscript.exe", "powershell.exe", "cmd.exe", "cscript.exe", "mshta.exe“)
+```
+
 ## Execution queries
 
 ### PowerShell used for downloading scripts or malware (T1059.001)
@@ -79,6 +85,12 @@ event_type in (REGISTRY_CREATE_KEY, REGISTRY_SET_VALUE) and registry_key contain
 event_type = PROCESS_START 
 and parent_process in ("WSReset.exe", "slui.exe", "fodhelper.exe", "eventvwr.exe", "cmstp.exe", "sethc.exe") 
 and child_process_integrity_level in ("High", "System")
+```
+### SMB connections from Outlook to send NTLM hashes (CVE-2023-23397) (T1212)
+```
+event_type = NETWORK_CONNECTION and remote_port in (139, 445)
+and remote_ip !regex "^(10|172\.(1[6-9]|2[0-9]|3[0-1])|192\.168|169\.254)\." and remote_ip not in ("::1", "127.0.0.1")
+and parent_process = "OUTLOOK.EXE"
 ```
 
 ## Lateral Movement queries
